@@ -1,0 +1,12 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/endlessbox/httpServer",
+            "binaryPath": "/home/endlessbox/httpServer/server",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "libft.h": "c"
+    }
+}
