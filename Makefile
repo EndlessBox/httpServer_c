@@ -1,6 +1,7 @@
-NAME = server
+NAME = server.out
 
-SRC = main.c
+SRC = main.c \
+		helpers.c
 
 OBJ = $(SRC:.c=.o)
 
