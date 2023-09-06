@@ -8,12 +8,13 @@
 # include "libft/libft.h"
 # include <stdio.h> // remove and use my own.
 # include <arpa/inet.h> // for inet_top
+# include <sys/epoll.h>
 // # include <signal.h>
 
 /* Defines */
-
-# define MAX_PENDING_CONNECTIONS 10
 # define SEND_NO_FLAG 0
+# define MAX_EPOLL_WAIT_BUFFER 128
+# define EPOLL_BLOCK_UNDEFINITELY -1
 
 
 /* Helper */

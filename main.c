@@ -47,33 +47,88 @@ int main(void) {
     ft_putendl("Binded succefully");
     printAddrInfo(choosenServInfo);
 
-    if (listen(socketFD, MAX_PENDING_CONNECTIONS) < 0) {
+    if (fcntl(socketFD, F_SETFL, O_NONBLOCK) < 0) {
+        perror("Fcntl set non blocking error");
+        return 1;
+    }
+
+    if (listen(socketFD, SOMAXCONN) < 0) {
         perror("Listening error");
         return 1;
     }
 
-    struct sockaddr_storage inConnInfos;
-    socklen_t inConnInfosLength;
-    int inConnFD;
+    int epollFD;
+    struct epoll_event epollEvent;
+
+    if((epollFD = epoll_create1(SEND_NO_FLAG)) < 0) {
+        perror("epoll instance creation error");
+        return 1;
+    }
+
+    epollEvent.data.fd = socketFD;
+    /*
+     *  EPOLLIN : Associated file descriptor is available for read.
+     *  EPOLLET : edge-triggered, read all before moving on.
+     */
+    epollEvent.events = EPOLLIN | EPOLLET;
+
+    if (epoll_ctl(epollFD, EPOLL_CTL_ADD, socketFD, &epollEvent) < 0) {
+        perror("epoll_ctl add socket connection fd error");
+        return 1;
+    }
+
+    struct epoll_event *epollTrigueredEvents;
+    if (!(epollTrigueredEvents = malloc(sizeof(struct epoll_event) * MAX_EPOLL_WAIT_BUFFER))) {
+        perror("epoll triguered events allocation error");
+        return 1;
+    }
 
     while (1) {
-        inConnInfosLength = sizeof(inConnInfos);
-        if ((inConnFD = accept(socketFD, (struct sockaddr*)&inConnInfos, &inConnInfosLength)) < 0) {
-            perror("Accept error");
-            continue;
-        }
-        printSocketAddr((struct sockaddr*)&inConnInfos);
+        int triggueredEvents;
+        int jumper = -1;
 
-        if (!fork()) {
-            close(socketFD);
-            char *response = "HTTP/1.1 200 OK\nContent-type: text/html\n\n<h1>why are you gay ?</h1>\n\n";
-            if (send(inConnFD, response, ft_strlen(response), SEND_NO_FLAG) < 0) {
-                perror("Send error");
+        triggueredEvents = epoll_wait(epollFD, epollTrigueredEvents, MAX_EPOLL_WAIT_BUFFER, EPOLL_BLOCK_UNDEFINITELY);
+        while(++jumper < triggueredEvents) {
+            uint32_t isEpollErr = epollTrigueredEvents[jumper].events & EPOLLERR;
+            uint32_t isEpollHangUp = epollTrigueredEvents[jumper].events & EPOLLHUP;
+            uint32_t isEpollNotAvai = !(epollTrigueredEvents[jumper].events & EPOLLIN);
+
+            if (isEpollErr || isEpollHangUp || isEpollNotAvai) {
+                ft_putstr_fd("closing connection fd", STDERR_FILENO);
+                close(epollTrigueredEvents[jumper].data.fd);
+                continue;
+            } else if (epollTrigueredEvents[jumper].data.fd == socketFD) {
+                // accept and push fd to epoll
+            } else {
+                // read data sent by connection (full read EPOLLET !!!!)
             }
-            close(inConnFD);
-            return 0;
         }
-        close(inConnFD);
+
     }
+
+
+    // struct sockaddr_storage inConnInfos;
+    // socklen_t inConnInfosLength;
+    // int inConnFD;
+
+    // while (1) {
+        // inConnInfosLength = sizeof(inConnInfos);
+        // if ((inConnFD = accept(socketFD, (struct sockaddr*)&inConnInfos, &inConnInfosLength)) < 0) {
+        //     perror("Accept error");
+        //     continue;
+        // }
+        // printSocketAddr((struct sockaddr*)&inConnInfos);
+
+        // if (!fork()) {
+        //     close(socketFD);
+        //     char *response = "HTTP/1.1 200 OK\nContent-type: text/html\n\n<h1>why are you gay ?</h1>\n\n";
+        //     if (send(inConnFD, response, ft_strlen(response), SEND_NO_FLAG) < 0) {
+        //         perror("Send error");
+        //     }
+        //     close(inConnFD);
+        //     return 0;
+        // }
+        // close(inConnFD);
+    // }
     return 0;
 }
