@@ -94,6 +94,6 @@ t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 char				*ft_strndup(const char *s1, size_t n);
 int					ft_iswhitespace(char c);
 void				ft_add_last(t_list *lst, t_list *new);
-int					get_next_line(const	int fd, char **line);
+int					ft_get_next_line(const	int fd, char **line);
 
 #endif

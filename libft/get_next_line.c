@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int			get_next_line(const int fd, char **line)
+int			ft_get_next_line(const int fd, char **line)
 {
 	char			*tmp;
 	int				length;
@@ -64,20 +64,5 @@ int			get_next_line(const int fd, char **line)
 		}
 	}
 	free(tmp);
-	return (0);
-}
-
-int		main(void)
-{
-	int fd;
-	char *line;
-
-	if ((fd = open("libft.h", O_RDONLY)))
-	{
-		while (get_next_line(fd, &line) > 0)
-		{
-			ft_putendl(line);
-		}
-	}
 	return (0);
 }

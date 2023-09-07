@@ -9,6 +9,7 @@
 # include <stdio.h> // remove and use my own.
 # include <arpa/inet.h> // for inet_top
 # include <sys/epoll.h>
+# include <errno.h>
 // # include <signal.h>
 
 /* Defines */
