@@ -9,7 +9,7 @@ void *readRequest(struct epoll_event epollTrigueredEvent, int debugg) {
     if (debugg)
         ft_putendl(
             "--------------------- Reading connection content "
-            "----------------------------------");
+            "---------------------");
 
     while ((readBytes = read(epollTrigueredEvent.data.fd, buffer,
                              READ_BUFF_SIZE)) > 0) {
@@ -26,7 +26,8 @@ void *readRequest(struct epoll_event epollTrigueredEvent, int debugg) {
     if (debugg) {
         ft_putstr(request);
         ft_putendl(
-            "-------------------- FINISHEEEEEEED READING --------------");
+            "--------------------- FINISHEEEEEEED READING "
+            "---------------------");
     }
 
     return request;
