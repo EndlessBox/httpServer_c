@@ -1,7 +1,8 @@
 NAME = server.out
 
 SRC = main.c \
-		helpers.c
+		helpers.c \
+		request.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -27,3 +28,6 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+
+run: re
+	./$(NAME)
