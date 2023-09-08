@@ -1,8 +1,7 @@
 #include "server.h"
 
 void *readRequest(struct epoll_event epollTrigueredEvent, int debugg) {
-    size_t bufferSize = 512;
-    char buffer[bufferSize];
+    char buffer[READ_BUFF_SIZE];
     int oldLength = 0;
     int readBytes = 0;
     char *request = NULL;
@@ -12,8 +11,8 @@ void *readRequest(struct epoll_event epollTrigueredEvent, int debugg) {
             "--------------------- Reading connection content "
             "----------------------------------");
 
-    while ((readBytes = read(epollTrigueredEvent.data.fd, buffer, bufferSize)) >
-           0) {
+    while ((readBytes = read(epollTrigueredEvent.data.fd, buffer,
+                             READ_BUFF_SIZE)) > 0) {
         if (!request) {
             request = ft_strnew(readBytes);
             ft_memcpy(request, buffer, readBytes);

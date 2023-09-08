@@ -16,6 +16,7 @@
 #define SEND_NO_FLAG 0
 #define MAX_EPOLL_WAIT_BUFFER 128
 #define EPOLL_BLOCK_UNDEFINITELY -1
+#define READ_BUFF_SIZE 1024
 
 /* Helper */
 void printAddrInfo(struct addrinfo servInfo);
