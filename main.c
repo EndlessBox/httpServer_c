@@ -12,7 +12,7 @@ int main(void) {
     config.ai_socktype = SOCK_STREAM;
     config.ai_flags = AI_PASSIVE;
 
-    if ((status = getaddrinfo(NULL, "6669", &config, &servInfo))) {
+    if ((status = getaddrinfo(NULL, "80", &config, &servInfo))) {
         printf("getaddrinfo error: %s\n", gai_strerror(status));
         return (1);
     }
@@ -135,8 +135,12 @@ int main(void) {
                     }
                 }
             } else {
-                char *request = readRequest(epollTrigueredEvents[jumper], 1);
-                free(request);
+                t_headers   headers;
+                char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), '\n');
+                verifyAndParseRequestLine(*request, &headers);
+                // PUT_NBR_DEBUGG("return of function : ", verifyAndParseRequestLine("get http://www.w3.org/pub/WWW/TheProject.html HTTP/1.1", &headers));
+                ft_putendl(headers.requestURI);
+                PUT_NBR_DEBUGG("method : ", headers.method)
             }
         }
     }
