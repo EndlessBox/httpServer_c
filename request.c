@@ -13,7 +13,7 @@ void *readRequest(struct epoll_event epollTrigueredEvent, int debugg) {
 
     while ((readBytes = read(epollTrigueredEvent.data.fd, buffer,
                              READ_BUFF_SIZE)) > 0) {
-        if (!request) {
+        if (!request && readBytes) {
             request = ft_strnew(readBytes);
             ft_memcpy(request, buffer, readBytes);
             oldLength += readBytes;
@@ -50,6 +50,7 @@ int    verifyAndParseRequestLine(char *request, t_headers *headers) {
         headers->method = POST;
     else
         return 1; // should be changed to better error handling !
+    // PUT_NBR_DEBUGG("HTTP Verbe ", headers->method);
     
     free(token);
     tmp = delimiter + 1;
@@ -58,10 +59,16 @@ int    verifyAndParseRequestLine(char *request, t_headers *headers) {
     if (!(headers->requestURI = ft_strndup(tmp, delimiter - tmp)))
         return 1;
     tmp = delimiter + 1;
-    if (ft_strcmp(tmp, HTTP_1_1) != 0) {
+    if (ft_strncmp(tmp, HTTP_1_1, HTTP_VERSION_LENGTH) != 0) {
         free(headers->requestURI);
         return 1;
     }
 
     return 0;
 }
+
+// int verifyAndStoreHeaderTokens(char *request, t_headers *s_headers) {
+
+// }
+
+

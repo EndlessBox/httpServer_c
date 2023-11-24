@@ -102,7 +102,6 @@ int main(void) {
                 !(epollTrigueredEvents[jumper].events & EPOLLIN);
 
             if (isEpollErr || isEpollHangUp || isEpollNotAvai) {
-                ft_putstr_fd("closing connection fd", STDERR_FILENO);
                 close(epollTrigueredEvents[jumper].data.fd);
                 continue;
             } else if (epollTrigueredEvents[jumper].data.fd == socketFD) {
@@ -137,10 +136,10 @@ int main(void) {
             } else {
                 t_headers   headers;
                 char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), '\n');
-                verifyAndParseRequestLine(*request, &headers);
-                // PUT_NBR_DEBUGG("return of function : ", verifyAndParseRequestLine("get http://www.w3.org/pub/WWW/TheProject.html HTTP/1.1", &headers));
-                ft_putendl(headers.requestURI);
-                PUT_NBR_DEBUGG("method : ", headers.method)
+                if (verifyAndParseRequestLine(*request, &headers)) {
+                    ft_putendl("Failed to parse request line closing connection");
+                    close(epollTrigueredEvents[jumper].data.fd);
+                }
             }
         }
     }

@@ -23,15 +23,19 @@ typedef enum   S_HTTP_METHODS{ GET, POST } T_HTTP_METHODS;
 #define S_GET "GET"
 #define S_POST "POST"
 #define HTTP_1_1 "HTTP/1.1"
+#define HTTP_VERSION_LENGTH 8
 #define SPACE_DELIMITER 32
+#define NEW_LINE 10
 
 #define PUT_NBR_DEBUGG(x, y) ft_putstr(x); ft_putnbr(y); ft_putchar('\n');
+#define PUT_STR_DEBUGG(x, y) ft_putstr(x); ft_putendl(y);
 
 
 /* Structs */
 typedef struct      s_headers {
     int             method;
     char            *requestURI;
+    char            *host;
 }                   t_headers;
 
 /* Helper */
