@@ -134,12 +134,29 @@ int main(void) {
                     }
                 }
             } else {
+                int currentConnectionFD = epollTrigueredEvents[jumper].data.fd;
                 t_headers   headers;
-                char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), '\n');
+                char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), NEW_LINE);
+
+                headers.s_tokens = NULL;
                 if (verifyAndParseRequestLine(*request, &headers)) {
-                    ft_putendl("Failed to parse request line closing connection");
-                    close(epollTrigueredEvents[jumper].data.fd);
+                    ft_putendl("Failed to parse request line, closing connection");
+                    close(currentConnectionFD);
                 }
+                
+                PUT_STR_DEBUGG("Request Line", *(request + 1))
+                if (verifyAndStoreHeaderTokens(request + 1, &headers)) {
+                    ft_putendl("Failed to parse header tokens, closing connection");
+                    send(currentConnectionFD, "By", 2, 0);
+                    close(currentConnectionFD);
+                }
+
+                printTokens(headers.s_tokens);
+
+
+                char *response = "coonnection was man dakchi l kharej";
+                send(currentConnectionFD, response, ft_strlen(response), 0);
+                close(currentConnectionFD);
             }
         }
     }

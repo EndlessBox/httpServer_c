@@ -50,11 +50,10 @@ int    verifyAndParseRequestLine(char *request, t_headers *headers) {
         headers->method = POST;
     else
         return 1; // should be changed to better error handling !
-    // PUT_NBR_DEBUGG("HTTP Verbe ", headers->method);
     
     free(token);
     tmp = delimiter + 1;
-    if (!(delimiter = ft_strchr(tmp, ' ')))
+    if (!(delimiter = ft_strchr(tmp, SPACE_DELIMITER)))
         return 1;
     if (!(headers->requestURI = ft_strndup(tmp, delimiter - tmp)))
         return 1;
@@ -63,12 +62,45 @@ int    verifyAndParseRequestLine(char *request, t_headers *headers) {
         free(headers->requestURI);
         return 1;
     }
-
     return 0;
 }
 
-// int verifyAndStoreHeaderTokens(char *request, t_headers *s_headers) {
+int verifyAndStoreHeaderTokens(char **request, t_headers *s_headers) {
+    while (ft_strlen(*request) > 1) {
+        char *colonDelimiter;
+        char *newLineDelimiter;
 
-// }
+        if (!(colonDelimiter = ft_strchr(*request, COLON)) || !(newLineDelimiter = ft_strchr(*request, '\0')))
+            return 1;
+        if ((*(colonDelimiter + 1)) != SPACE_DELIMITER)
+            return 1;
+        appendNewToken(*request, colonDelimiter - (*request), colonDelimiter + 2, newLineDelimiter - colonDelimiter - 2, s_headers);
+        request++;
+    }
+    return 0;
+}
+
+int appendNewToken(char *key, size_t keySize, char  *value, size_t valueSize, t_headers *s_headers) {
+    t_tokens *s_tokens = s_headers->s_tokens;
+    if (!s_tokens) {
+        PUT_STR_DEBUGG("HERE 0","");
+        s_tokens = malloc(sizeof(t_tokens));
+        s_tokens->next = NULL;
+        s_tokens->tail = s_tokens;
+    } else {
+        s_tokens->tail->next = malloc(sizeof(t_tokens));
+        s_tokens->tail = s_tokens->tail->next;
+        s_tokens->tail->next = NULL;
+
+    }
+
+
+    // if it fails need to trigger a full free of the linked list ! either here or in parents !!
+    if (!(s_tokens->tail->key = ft_strndup(key, keySize)))
+        return 1;
+    if(!(s_tokens->tail->value = ft_strndup(value, valueSize)))
+        return 1;
+    return 0;
+}
 
 

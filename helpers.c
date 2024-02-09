@@ -20,3 +20,12 @@ void printSocketAddr(struct sockaddr *socketAddr) {
     ft_putstr("new connection from : ");
     ft_putendl(ipstr);
 }
+
+void printTokens(t_tokens *s_tokens) {
+    t_tokens *tmp = s_tokens;
+    while(tmp) {
+        PUT_STR_DEBUGG("Key : ", tmp->key)
+        PUT_STR_DEBUGG("Value : ", tmp->value)
+        tmp = tmp->next;
+    }
+}
