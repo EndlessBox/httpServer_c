@@ -136,16 +136,13 @@ int main(void) {
             } else {
                 int currentConnectionFD = epollTrigueredEvents[jumper].data.fd;
                 t_headers   headers;
-                char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), NEW_LINE);
+                char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 0), NEW_LINE);
 
                 headers.s_tokens = NULL;
-                if (!headers.s_tokens) PUT_STR_DEBUGG("TOOOOOOOOOOOOOZZ","");
                 if (verifyAndParseRequestLine(*request, &headers)) {
                     ft_putendl("Failed to parse request line, closing connection");
                     close(currentConnectionFD);
                 }
-                
-                PUT_STR_DEBUGG("Request Line", *(request + 1))
                 if (verifyAndStoreHeaderTokens(request + 1, &headers)) {
                     ft_putendl("Failed to parse header tokens, closing connection");
                     send(currentConnectionFD, "By", 2, 0);
@@ -153,10 +150,15 @@ int main(void) {
                 }
 
                 printTokens(headers.s_tokens);
-
-
-                char *response = "coonnection was man dakchi l kharej";
-                send(currentConnectionFD, response, ft_strlen(response), 0);
+                PUT_STR_DEBUGG("Wahya","");
+                int pageFD = open("./pages/404.html", O_RDONLY);
+                PUT_NBR_DEBUGG("page fd ", pageFD)
+                char buffer[READ_BUFF_SIZE];
+                int readBytes = 0;
+                while ((readBytes = read(pageFD, buffer, READ_BUFF_SIZE)) > 0) {
+                    send(currentConnectionFD, buffer, readBytes, 0);
+                }
+                close(pageFD);
                 close(currentConnectionFD);
             }
         }
