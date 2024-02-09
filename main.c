@@ -139,6 +139,7 @@ int main(void) {
                 char **request = ft_strsplit(readRequest(epollTrigueredEvents[jumper], 1), NEW_LINE);
 
                 headers.s_tokens = NULL;
+                if (!headers.s_tokens) PUT_STR_DEBUGG("TOOOOOOOOOOOOOZZ","");
                 if (verifyAndParseRequestLine(*request, &headers)) {
                     ft_putendl("Failed to parse request line, closing connection");
                     close(currentConnectionFD);
