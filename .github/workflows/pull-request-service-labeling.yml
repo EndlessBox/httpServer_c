@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: |
           # Parse changeset
-          SERVICES=$(cat ../../.changeset/*.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
+          SERVICES=$(cat ./*.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
           IN_PLACE_LABELS=${{ github.event.pull_request.labels.*.name }}
           echo "$SERVICES"
 
