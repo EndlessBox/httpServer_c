@@ -11,6 +11,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - run: gh pr edit --add-label "casino-free-spins,test,test1"
+        - uses: actions/checkout@v4
+        - run: gh pr edit --add-label "casino-free-spins,test,test1"
     env:
       GH_TOKEN: ${{ github.token }}
