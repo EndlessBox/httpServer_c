@@ -9,6 +9,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+        - uses: actions/checkout@v4
         - run: gh pr edit --add-label "casino-free-spins,test,test1"
     env:
       GH_TOKEN: ${{ github.token }}
