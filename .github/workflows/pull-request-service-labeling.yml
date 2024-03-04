@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          # Parse changeset
-          SERVICES=$(cat ./*.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
-          IN_PLACE_LABELS=${{ github.event.pull_request.labels.*.name }}
-          echo "$SERVICES"
+         {
+            # Parse changeset
+            # SERVICES=$(cat ./*.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
+            IN_PLACE_LABELS=${{ github.event.pull_request.labels.*.name }}
+            echo "$SERVICES"
+         } >> "$GITHUB_OUTPUT"
 
