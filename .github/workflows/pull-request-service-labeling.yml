@@ -9,9 +9,9 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-         - name: Add labels to current branch
-           run: gh pr edit ${{ github.head_ref }} --add-label "casino-free-spins,test,test1"
-           id: add_label_to_branch
+          - uses: actions/checkout@v4
+          - run: gh pr edit ${{ github.head_ref }} --add-label "casino-free-spins,test,test1"
+            id: add_label_to_branch
     env:
       GH_TOKEN: ${{ github.token }}
       BRANCH_NAME: ${{ github.head_ref }}
