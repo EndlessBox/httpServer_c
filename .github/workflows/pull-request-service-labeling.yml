@@ -12,7 +12,7 @@ jobs:
       - run: |
          {
             # Parse changeset
-            IN_PLACE_LABELS=${{ github.event.pull_request.labels.*.name }}
+            IN_PLACE_LABELS=${{ toJson(github.event.pull_request.labels.*.name) }}
             echo "$IN_PLACE_LABELS"
             SERVICES=$(cat *.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
             echo "$SERVICES"
