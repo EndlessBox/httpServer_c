@@ -2,8 +2,7 @@ name: Pull request service labeling
 on:
   pull_request:
     branches:
-    - master
-
+      - master
 
 jobs:
   pr-labeler:
@@ -12,12 +11,4 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - run: |
-         {
-            # Parse changeset
-            IN_PLACE_LABELS=${{ toJson(github.event.pull_request.labels.*.name) }}
-            echo "$IN_PLACE_LABELS"
-            SERVICES=$(cat *.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
-            echo "$SERVICES"
-         } >> "$GITHUB_OUTPUT"
-
+      - run: gh pr edit --add-label casino-free-spins,test,test1
