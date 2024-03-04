@@ -12,8 +12,9 @@ jobs:
       - run: |
          {
             # Parse changeset
-            # SERVICES=$(cat *.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
             IN_PLACE_LABELS=${{ github.event.pull_request.labels.*.name }}
+            echo "$IN_PLACE_LABELS"
+            SERVICES=$(cat *.md | grep -oP '^"\S+": (patch|minor|major)$' | grep -oP "\"\K.+(?=\")" | grep -v '^@')
             echo "$SERVICES"
          } >> "$GITHUB_OUTPUT"
 
